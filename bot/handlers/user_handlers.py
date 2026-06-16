@@ -1,15 +1,21 @@
-from aiogram import Router, types, F
+from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
 from aiogram.types import ContentType
-from bot.states import BookingState, ReviewState, QuestionState
-from bot.services.reservation_draft import process_add_apartment_to_draft
-from bot.db.crud import is_apartment_available, check_user_exists, insert_user_data, insert_booking_data, insert_review, get_user_reservation_draft, delete_reservation_draft
-from bot.keyboards.user_keyboard import start_keyboard, booking_keyboard, catalog_categories_keyboard
-from bot.payment import send_invoice
-from bot.common.callbacks import BookingCB
+from apps.bookings.selectors import insert_booking_data, is_room_available
+from apps.users.selectors import check_user_exists, insert_user_data
 from bot.common import texts
-from bot.services.booking_service import calculate_days, calculate_price, get_dates
+from bot.common.callbacks import BookingCB
+from bot.db.crud import (delete_reservation_draft, get_user_reservation_draft,
+                         insert_review)
+from bot.keyboards.user_keyboard import (booking_keyboard,
+                                         catalog_categories_keyboard,
+                                         start_keyboard)
+from bot.payment import send_invoice
 from bot.services.ai_service import process_question
+from bot.services.booking_service import (calculate_days, calculate_price,
+                                          get_dates)
+from bot.services.reservation_draft import process_add_apartment_to_draft
+from bot.states import BookingState, QuestionState, ReviewState
 
 router = Router()
 
@@ -40,7 +46,7 @@ async def add_button(callback_query: types.CallbackQuery, state: FSMContext):
         user_id = callback_query.from_user.id
         rent_days = data.get('rent_days', 1)
         start_date, end_date = get_dates(rent_days)
-        if is_apartment_available(apartment.id, start_date, end_date):
+        if is_room_available(apartment.id, start_date, end_date):
             if check_user_exists(user_id):
                 keyboard = booking_keyboard()
                 await callback_query.message.edit_reply_markup(reply_markup=keyboard)
