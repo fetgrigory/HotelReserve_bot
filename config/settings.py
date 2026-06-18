@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'apps.rooms',
     'apps.users',
     'apps.bookings',
+    'apps.reviews',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
