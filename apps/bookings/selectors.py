@@ -1,6 +1,6 @@
 from datetime import timedelta
 from asgiref.sync import sync_to_async
-from apps.bookings.models import Booking
+from apps.bookings.models import Booking, ReservationDraft
 from apps.users.models import User
 from apps.rooms.models import Room
 
@@ -33,3 +33,21 @@ def is_room_available(room_id, start_date, end_date):
         start_date__lte=end_date,
         end_date__gte=start_date,
     ).exists()
+
+
+# Retrieves the current reservation draft for a user
+@sync_to_async
+def get_user_reservation_draft(user_telegram_id: int):
+    return ReservationDraft.objects.filter(
+        user__user_id=user_telegram_id
+    ).select_related(
+        'apartment'
+    ).prefetch_related(
+        'services__service'
+    ).first()
+
+
+# Deletes a user's reservation draft
+@sync_to_async
+def delete_reservation_draft(user_telegram_id: int):
+    ReservationDraft.objects.filter(user__user_id=user_telegram_id).delete()

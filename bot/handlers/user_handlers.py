@@ -1,12 +1,11 @@
 from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
 from aiogram.types import ContentType
-from apps.bookings.selectors import insert_booking_data, is_room_available
+from apps.bookings.selectors import insert_booking_data, is_room_available, get_user_reservation_draft, delete_reservation_draft
+from apps.reviews.selectors import insert_review
 from apps.users.selectors import check_user_exists, insert_user_data
 from bot.common import texts
 from bot.common.callbacks import BookingCB
-from bot.db.crud import (delete_reservation_draft, get_user_reservation_draft,
-                         insert_review)
 from bot.keyboards.user_keyboard import (booking_keyboard,
                                          catalog_categories_keyboard,
                                          start_keyboard)
