@@ -35,6 +35,28 @@ def is_room_available(room_id, start_date, end_date):
     ).exists()
 
 
+# Adds apartment to user's reservation draft
+@sync_to_async
+def add_apartment_to_draft(user_telegram_id: int, apartment_id: int, start_date, end_date):
+    user = User.objects.filter(user_id=user_telegram_id).first()
+    if not user:
+        return
+
+    draft = ReservationDraft.objects.filter(user_id=user.id).first()
+    if not draft:
+        ReservationDraft.objects.create(
+            user_id=user.id,
+            apartment_id=apartment_id,
+            start_date=start_date,
+            end_date=end_date
+        )
+    else:
+        draft.apartment_id = apartment_id
+        draft.start_date = start_date
+        draft.end_date = end_date
+        draft.save()
+
+
 # Retrieves the current reservation draft for a user
 @sync_to_async
 def get_user_reservation_draft(user_telegram_id: int):

@@ -1,7 +1,7 @@
+from datetime import datetime, timedelta
 from aiogram import types
 from aiogram.fsm.context import FSMContext
-from datetime import datetime, timedelta
-from bot.db.crud import add_apartment_to_draft, is_apartment_available
+from apps.bookings.selectors import add_apartment_to_draft, is_room_available
 
 
 # Add apartment to draft
@@ -16,7 +16,7 @@ async def process_add_apartment_to_draft(callback: types.CallbackQuery, state: F
     end_date = start_date + timedelta(days=rent_days)
 
     # Check if the apartment is available for the selected dates
-    if not is_apartment_available(apartment.id, start_date, end_date):
+    if not is_room_available(apartment.id, start_date, end_date):
         return await callback.answer(
             "❌ Квартира уже забронирована на выбранные даты!\n"
             "Пожалуйста, выберите другие даты или другую квартиру.",
