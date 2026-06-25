@@ -26,7 +26,7 @@ async def show_room_data(message: types.Message, rooms, index=0):
         f"<strong>Номер {paginator.page} из {paginator.pages}</strong>"
     )
 
-    keyboard = catalog_navigation_keyboard(index, len(rooms))
+    keyboard = catalog_navigation_keyboard(index, len(rooms), record.id)
 
     if photos_info:
         await message.bot.send_media_group(

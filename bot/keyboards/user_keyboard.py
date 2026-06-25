@@ -24,10 +24,10 @@ def catalog_categories_keyboard():
 
 
 # Create an InlineKeyboardMarkup for catalog navigation
-def catalog_navigation_keyboard(index, total_records):
+def catalog_navigation_keyboard(index, total_records, apartment_id):
     keyboard = InlineKeyboardBuilder()
     keyboard.row(types.InlineKeyboardButton(text="Забронировать ✅", callback_data="add"))
-    keyboard.row(types.InlineKeyboardButton(text="Оставить отзыв ⭐", callback_data="add_review"))
+    keyboard.row(types.InlineKeyboardButton(text="Оставить отзыв ⭐", callback_data=f"add_review:{apartment_id}"))
     # Add a button to go to the previous item if not on the first item
     if index > 0:
         keyboard.row(types.InlineKeyboardButton(text="◀ Пред.", callback_data="prev_view"))
@@ -51,5 +51,3 @@ def booking_keyboard():
     )
 
     keyboard.adjust(2, 1, 2, 1)
-
-    return keyboard.as_markup()
