@@ -46,7 +46,7 @@ async def add_button(callback_query: types.CallbackQuery, state: FSMContext):
         rent_days = data.get('rent_days', 1)
         start_date, end_date = get_dates(rent_days)
         if is_room_available(apartment.id, start_date, end_date):
-            if check_user_exists(user_id):
+            if await check_user_exists(user_id):
                 keyboard = booking_keyboard()
                 await callback_query.message.edit_reply_markup(reply_markup=keyboard)
             else:
@@ -86,7 +86,12 @@ async def process_phone(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
     user_id = message.from_user.id
 
-    insert_user_data(user_id, user_data['first_name'], user_data['last_name'], user_data['phone'])
+    await insert_user_data(
+    user_id,
+    user_data['first_name'],
+    user_data['last_name'],
+    user_data['phone']
+)
     await state.clear()
     await message.answer(texts.REGISTRATION_DONE)
     apartment = user_data['current_apartment']

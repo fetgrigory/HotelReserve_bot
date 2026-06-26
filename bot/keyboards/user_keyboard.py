@@ -51,3 +51,5 @@ def booking_keyboard():
     )
 
     keyboard.adjust(2, 1, 2, 1)
+
+    return keyboard.as_markup()
