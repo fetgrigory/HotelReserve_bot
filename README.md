@@ -108,6 +108,16 @@ HotelReserve_bot/
 │   │   ├── models.py
 │   │   ├── tests.py
 │   │   └── views.py
+│   ├── reviews/                    # Модуль работы с отзывами
+│   │   ├── migrations/
+│   │   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── selectors.py
+│   │   ├── models.py
+│   │   ├── tests.py
+│   │   └── views.py
 │   ├── rooms/                    # Модуль работы с комнатами
 │   │   ├── migrations/
 │   │   │   └── __init__.py
