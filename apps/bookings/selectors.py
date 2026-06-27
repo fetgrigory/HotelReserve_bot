@@ -7,10 +7,10 @@ from apps.rooms.models import Room
 
 # Inserts a new booking record
 @sync_to_async
-def insert_booking_data(user_id, room_id, start_date, rent_days, total_price):
+def insert_booking_data(telegram_id, room_id, start_date, rent_days, total_price):
     end_date = start_date + timedelta(days=rent_days)
 
-    user = User.objects.get(id=user_id)
+    user = User.objects.get(telegram_id=telegram_id)
     room = Room.objects.get(id=room_id)
 
     booking = Booking.objects.create(
