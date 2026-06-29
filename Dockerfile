@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir uv
 
 # Copy dependency metadata and install locked dependencies
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen
+RUN uv sync --frozen --no-install-project
 
 # Copy application source code
 COPY . .
