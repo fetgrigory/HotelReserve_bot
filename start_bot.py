@@ -13,7 +13,6 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.context import FSMContext
 from bot.handlers.user_handlers import router as user_router
 from bot.handlers.catalog_handlers import router as catalog_router
-from bot.nlp.rag.add_document_handlers import router as document_router
 from bot.keyboards.user_keyboard import start_keyboard
 
 logging.basicConfig(
@@ -41,7 +40,6 @@ dp = Dispatcher(storage=storage)
 dp.include_router(router)
 dp.include_router(user_router)
 dp.include_router(catalog_router)
-dp.include_router(document_router)
 
 
 @router.message(Command("start"))
