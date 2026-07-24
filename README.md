@@ -162,11 +162,6 @@ HotelReserve_bot/
 │   │   ├── __init__.py
 │   │   ├── callbacks.py
 │   │   └── texts.py
-│   ├── db/                       # Работа с базой данных
-│   │   ├── __init__.py
-│   │   ├── crud.py
-│   │   ├── database.py
-│   │   └── models.py
 │   ├── handlers/                 # Обработчики (API / логика взаимодействия)
 │   │   ├── __init__.py
 │   │   ├── catalog_handlers.py
@@ -216,7 +211,6 @@ HotelReserve_bot/
 | `aiogram`       | Фреймворк для создания Telegram-ботов|
 | `Django`|Веб-фреймворк с ORM и встроенной административной панелью|
 | `psycopg-binary`|Предкомпилированный клиент PostgreSQL для быстрого развертывания бота|
-| `SQLAlchemy`| Работа с PostgreSQL через ORM и выполнение SQL-запросов|
 | `pgvector`|Расширение PostgreSQL для хранения и поиска по векторным данным (эмбеддингам)|
 | `python-dotenv` | Работа с переменными окружения|
 | `transformers` | Библиотека для NLP и работы с трансформерами от Hugging Face|
