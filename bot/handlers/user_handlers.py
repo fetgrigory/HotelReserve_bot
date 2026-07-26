@@ -212,11 +212,17 @@ async def save_review(message: types.Message, state: FSMContext):
 
     user_id = message.from_user.id
 
-    await insert_review(
+    review = await insert_review(
         user_id,
         apartment,
         message.text,
     )
+
+    if review is None:
+        await message.answer(
+            "Для отправки отзыва необходимо зарегистрироваться."
+        )
+        return
 
     await message.answer(texts.REVIEW_SUBMITTED)
     await state.clear()

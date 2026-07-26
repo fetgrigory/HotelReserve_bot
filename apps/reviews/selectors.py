@@ -8,10 +8,15 @@ from bot.nlp.sentiment_analyzer import analyze_review
 @sync_to_async
 def insert_review(telegram_id, room_id, review_text):
     analysis = analyze_review(review_text)
+
     # Find existing user by Telegram ID
-    user = User.objects.get(
-        telegram_id=telegram_id
-    )
+    user = User.objects.filter(
+        telegram_id=telegram_id,
+    ).first()
+
+    if not user:
+        return None
+
     # Create review with sentiment analysis results
     review = Review.objects.create(
         user=user,
