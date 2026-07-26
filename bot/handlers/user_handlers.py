@@ -211,7 +211,12 @@ async def save_review(message: types.Message, state: FSMContext):
     apartment = data['review_apartment_id']
 
     user_id = message.from_user.id
-    insert_review(user_id, apartment, message.text)
+
+    await insert_review(
+        user_id,
+        apartment,
+        message.text,
+    )
 
     await message.answer(texts.REVIEW_SUBMITTED)
     await state.clear()
