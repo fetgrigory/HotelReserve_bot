@@ -70,6 +70,8 @@ CVC/CVV: 111<br />
 ### Django Admin
 <img width="855" height="484" alt="admin" src="https://github.com/user-attachments/assets/eb38fc13-cd08-4d98-8c2b-675af61a27ed" /><br />
 <img width="1669" height="911" alt="admin_2" src="https://github.com/user-attachments/assets/c520c609-df25-41a3-a780-8d8b29109db2" /><br />
+<img width="1912" height="905" alt="Снимок экрана 2026-07-27 171045" src="https://github.com/user-attachments/assets/91c42446-7c36-437b-8e93-4a85f469c6d6" /><br />
+<img width="1914" height="906" alt="Снимок экрана 2026-07-27 171143" src="https://github.com/user-attachments/assets/6b69d983-39fa-4d40-8f17-44e753f0811b" /><br />
 
 ### Пользовательский интерфейс
 ![Снимок экрана 2025-06-06 164056](https://github.com/user-attachments/assets/863e2b1a-277e-4d5c-b589-1539369ab59e)<br />
