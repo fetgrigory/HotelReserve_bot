@@ -9,6 +9,7 @@ class ReviewAdmin(admin.ModelAdmin):
         "id",
         "user_id_display",
         "room_id_display",
+        "review_preview",
         "sentiment_display",
         "date",
     )
@@ -79,6 +80,16 @@ class ReviewAdmin(admin.ModelAdmin):
     @admin.display(description="ID номера")
     def room_id_display(self, obj):
         return obj.room.id
+
+    # Review preview
+    @admin.display(description="Отзыв")
+    def review_preview(self, obj):
+        text = obj.review_text
+
+        if len(text) > 60:
+            return text[:60] + "..."
+
+        return text
 
     # Sentiment score
     @admin.display(description="Оценка")
