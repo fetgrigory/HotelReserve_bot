@@ -246,7 +246,7 @@ async def handler_question(message: types.Message, state: FSMContext):
     thinking_msg = await message.answer(texts.AI_THINKING)
 
     try:
-        response, updated_messages = process_question(message.text, messages)
+        response, updated_messages = await process_question(message.text, messages)
 
         await message.bot.delete_message(
             chat_id=message.chat.id,

@@ -1,17 +1,18 @@
 from typing import List, Dict
-from bot.nlp.llm_client import ask_gpt
-from bot.nlp.rag.vector_search import search_contract, format_contract_results
+from asgiref.sync import sync_to_async
+from bot.nlp.rag.vector_search import search_faq, format_faq_results
 
 
-def process_question(message_text: str, messages: List[Dict]) -> tuple[str, List[Dict]]:
+async def process_question(message_text: str,
+                           messages: List[Dict]) -> tuple[str, List[Dict]]:
     new_messages = messages.copy()
     new_messages.append({"role": "user", "content": message_text})
-    # Search contracts and respond if no results found, ask GPT
-    results = search_contract(message_text, limit=3)
+    # Search FAQ and respond with the most relevant answer
+    results = await sync_to_async(search_faq)(message_text, limit=1)
     if results:
-        response = format_contract_results(results)
+        response = format_faq_results(results)
     else:
-        # Get GPT's response
-        response = ask_gpt(new_messages)
+        response = "Информация по данному вопросу не найдена."
+
     new_messages.append({"role": "assistant", "content": response})
     return response, new_messages
