@@ -3,7 +3,7 @@ from pgvector.django import CosineDistance
 from apps.support.models import FAQ
 
 # Uploading a model for embeddings
-model = SentenceTransformer("all-MiniLM-L6-v2")
+model = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 
 
 def search_faq(query_text: str, limit: int = 1) -> list:
@@ -30,7 +30,7 @@ def search_faq(query_text: str, limit: int = 1) -> list:
 
 def format_faq_results(results: list) -> str:
     # Checking match quality
-    if results[0][1] < 0.7:
+    if results[0][1] < 0.6:
         return "Информация не найдена."
 
     return results[0][0]

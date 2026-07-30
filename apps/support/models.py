@@ -3,7 +3,7 @@ from pgvector.django import VectorField
 from sentence_transformers import SentenceTransformer
 
 # Uploading a model for embeddings
-embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+embedding_model = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 
 
 # Frequently asked questions table with vector embeddings
@@ -16,7 +16,7 @@ class FAQ(models.Model):
 
     def save(self, *args, **kwargs):
         # Generate embedding before save
-        text = f"{self.question}\n{self.answer}"
+        text = self.question
         self.embedding = embedding_model.encode(text).tolist()
         super().save(*args, **kwargs)
 
