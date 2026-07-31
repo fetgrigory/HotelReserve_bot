@@ -1,6 +1,6 @@
 from typing import List, Dict
 from asgiref.sync import sync_to_async
-from bot.nlp.rag.vector_search import search_faq, format_faq_results
+from bot.nlp.rag.vector_search import search_faq, get_faq_answer
 
 
 async def process_question(message_text: str,
@@ -10,7 +10,7 @@ async def process_question(message_text: str,
     # Search FAQ and respond with the most relevant answer
     results = await sync_to_async(search_faq)(message_text, limit=1)
     if results:
-        response = format_faq_results(results)
+        response = await sync_to_async(get_faq_answer)(results)
     else:
         response = "Информация по данному вопросу не найдена."
 
