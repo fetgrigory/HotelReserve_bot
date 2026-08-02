@@ -1,7 +1,12 @@
 from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
 from aiogram.types import ContentType
-from apps.bookings.crud import insert_booking_data, is_room_available, get_user_reservation_draft, delete_reservation_draft
+from apps.bookings.crud import (
+    insert_booking_data,
+    is_room_available,
+    get_user_reservation_draft,
+    delete_reservation_draft
+)
 from apps.reviews.crud import insert_review
 from apps.users.crud import check_user_exists, insert_user_data
 from bot.common import texts
@@ -74,10 +79,10 @@ async def add_button(callback_query: types.CallbackQuery, state: FSMContext):
                 await callback_query.message.answer(texts.BOOKING_FIRST_NAME)
 
         else:
-            await callback_query.answer(texts.ERROR_ALREADY_BOOKED)
+            await callback_query.answer(texts.ERROR_ROOM_ALREADY_BOOKED)
 
     else:
-        await callback_query.answer(texts.ERROR_APARTMENT_NOT_FOUND)
+        await callback_query.answer(texts.ERROR_ROOM_NOT_FOUND)
 
 
 # Get username
@@ -145,7 +150,7 @@ async def add_days(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.message.edit_text(text=text, reply_markup=keyboard)
 
 
-# Decrease the rental period and calculate the total price
+# Decrease rental period
 @router.callback_query(F.data == BookingCB.SUBTRACT_DAYS)
 async def subtract_days(callback_query: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
@@ -188,7 +193,13 @@ async def handler_successful_payment(bot, message, state: FSMContext):
     start_date, _ = get_dates(rent_days)
     total_price = calculate_price(apartment.price, rent_days)
 
-    await insert_booking_data(user_id, apartment.id, start_date, rent_days, total_price)
+    await insert_booking_data(
+        user_id,
+        apartment.id,
+        start_date,
+        rent_days,
+        total_price
+    )
 
     await bot.send_message(user_id, texts.PAYMENT_SUCCESS)
 
@@ -220,7 +231,7 @@ async def save_review(message: types.Message, state: FSMContext):
 
     if review is None:
         await message.answer(
-            "Для отправки отзыва необходимо зарегистрироваться."
+            texts.REVIEW_REGISTRATION_REQUIRED
         )
         return
 
@@ -268,7 +279,7 @@ async def show_booking_draft(message: types.Message):
 
     if not draft or not draft.apartment:
         await message.answer(
-            texts.DRAFT_EMPTY,
+            texts.BOOKING_EMPTY,
             reply_markup=start_keyboard(message.from_user.id)
         )
         return
@@ -276,13 +287,12 @@ async def show_booking_draft(message: types.Message):
     days = (draft.end_date - draft.start_date).days
     total_price = calculate_price(draft.apartment.price, days)
 
-    text = (
-        f"🛒 **Ваш черновик бронирования:**\n\n"
-        f"🏠 {draft.apartment.address}\n"
-        f"📅 Заезд: {draft.start_date.strftime('%d.%m.%Y')}\n"
-        f"🏁 Выезд: {draft.end_date.strftime('%d.%m.%Y')}\n"
-        f"⏱️ {days} дней\n"
-        f"💰 {total_price} ₽"
+    text = texts.BOOKING_DRAFT_INFO.format(
+        room=draft.apartment.address,
+        start_date=draft.start_date.strftime("%d.%m.%Y"),
+        end_date=draft.end_date.strftime("%d.%m.%Y"),
+        days=days,
+        price=total_price
     )
 
     keyboard = booking_keyboard()
@@ -294,7 +304,7 @@ async def show_booking_draft(message: types.Message):
 async def clear_draft(callback: types.CallbackQuery):
     delete_reservation_draft(callback.from_user.id)
 
-    await callback.message.edit_text(texts.DRAFT_CLEARED)
+    await callback.message.edit_text(texts.BOOKING_CLEARED)
     await callback.answer()
 
 
