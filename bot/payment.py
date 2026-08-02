@@ -1,7 +1,7 @@
 import os
 from aiogram import Bot, types
 from aiogram.types import LabeledPrice
-from apps.rooms.selectors import get_catalog_data
+from apps.rooms.crud import get_catalog_data
 
 
 async def send_invoice(bot: Bot, callback_query: types.CallbackQuery, user_data: dict):

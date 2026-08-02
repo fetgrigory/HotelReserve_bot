@@ -1,6 +1,6 @@
 from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
-from apps.rooms.selectors import (
+from apps.rooms.crud import (
     get_catalog_data,
     get_catalog_by_category)
 from bot.keyboards.user_keyboard import catalog_categories_keyboard

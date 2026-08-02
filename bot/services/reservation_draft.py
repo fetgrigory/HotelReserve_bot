@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from aiogram import types
 from aiogram.fsm.context import FSMContext
-from apps.bookings.selectors import add_apartment_to_draft, is_room_available
+from apps.bookings.crud import add_apartment_to_draft, is_room_available
 
 
 # Add apartment to draft
