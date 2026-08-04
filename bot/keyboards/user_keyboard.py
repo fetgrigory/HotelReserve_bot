@@ -5,6 +5,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 def start_keyboard():
     keyboard = ReplyKeyboardBuilder()
     keyboard.add(types.KeyboardButton(text="🛍Каталог"))
+    keyboard.row(types.KeyboardButton(text="🛒 Моя корзина"))
     keyboard.row(types.KeyboardButton(text="🎧 Задать вопрос"))
     return keyboard.as_markup(resize_keyboard=True)
 

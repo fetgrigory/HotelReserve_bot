@@ -273,22 +273,22 @@ async def handler_question(message: types.Message, state: FSMContext):
 
 
 # Reservation draft
-@router.message(F.text == "🛒 Корзина")
+@router.message(F.text == "🛒 Моя корзина")
 async def show_booking_draft(message: types.Message):
-    draft = get_user_reservation_draft(message.from_user.id)
+    draft = await get_user_reservation_draft(message.from_user.id)
 
-    if not draft or not draft.apartment:
+    if not draft or not draft.room:
         await message.answer(
             texts.BOOKING_EMPTY,
-            reply_markup=start_keyboard(message.from_user.id)
+            reply_markup=start_keyboard()
         )
         return
 
     days = (draft.end_date - draft.start_date).days
-    total_price = calculate_price(draft.apartment.price, days)
+    total_price = calculate_price(draft.room.price, days)
 
     text = texts.BOOKING_DRAFT_INFO.format(
-        room=draft.apartment.address,
+        room=draft.room.room_number,
         start_date=draft.start_date.strftime("%d.%m.%Y"),
         end_date=draft.end_date.strftime("%d.%m.%Y"),
         days=days,
@@ -302,7 +302,7 @@ async def show_booking_draft(message: types.Message):
 
 @router.callback_query(F.data == BookingCB.CLEAR_DRAFT)
 async def clear_draft(callback: types.CallbackQuery):
-    delete_reservation_draft(callback.from_user.id)
+    await delete_reservation_draft(callback.from_user.id)
 
     await callback.message.edit_text(texts.BOOKING_CLEARED)
     await callback.answer()

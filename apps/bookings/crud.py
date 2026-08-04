@@ -57,15 +57,15 @@ def add_apartment_to_draft(user_telegram_id: int, apartment_id: int, start_date,
         draft.save()
 
 
-# Retrieves the current reservation draft for a user
+# Retrieves current reservation draft
 @sync_to_async
 def get_user_reservation_draft(user_telegram_id: int):
     return ReservationDraft.objects.filter(
         user__telegram_id=user_telegram_id
     ).select_related(
-        'apartment'
+        'room'
     ).prefetch_related(
-        'services__service'
+        'services'
     ).first()
 
 
