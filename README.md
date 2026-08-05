@@ -141,26 +141,30 @@ HotelReserve_bot/
 │   └── wsgi.py
 │
 ├── bot/                          # Основной backend / бизнес-логика приложения
-│   ├── common/                   # Общие компоненты проекта
+│   ├── common/                   # Общие константы и компоненты
 │   │   ├── __init__.py
 │   │   ├── callbacks.py
 │   │   └── texts.py
-│   ├── handlers/                 # Обработчики (API / логика взаимодействия)
+│   ├── handlers/                 # Обработчики пользовательских запросов
 │   │   ├── __init__.py
+│   │   ├── ai_handlers.py
+│   │   ├── booking_handlers.py
 │   │   ├── catalog_handlers.py
-│   │   └── user_handlers.py
+│   │   ├── payment_handlers.py
+│   │   ├── reservation_handlers.py
+│   │   └── review_handlers.py
 │   ├── keyboards/                # Клавиатуры интерфейса
 │   │   ├── __init__.py
 │   │   └── user_keyboard.py
-│   ├── nlp/                      # NLP и работа с LLM
-│   │   ├── rag/                 # Retrieval-Augmented Generation модуль
+│   ├── nlp/                     # Модули обработки естественного языка и LLM
+│   │   ├── rag/
 │   │   │   ├── __init__.py
 │   │   │   └── vector_search.py
 │   │   ├── __init__.py
 │   │   ├── llm_client.py
 │   │   └── sentiment_analyzer.py
 │   │
-│   ├── services/                # Бизнес-сервисы приложения
+│   ├── services/                  # Сервисы бизнес-логики
 │   │   ├── __init__.py
 │   │   ├── ai_service.py
 │   │   ├── booking_service.py
