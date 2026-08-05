@@ -11,8 +11,8 @@ async def send_invoice(bot: Bot, callback_query: types.CallbackQuery, user_data:
     description = "Аренда квартиры"
     invoice_payload = "month_sub"
     provider_token = os.getenv('PAYMENTS_TOKEN')
-    current_apartment = user_data.get('current_apartment')
-    if not current_apartment:
+    current_room = user_data.get('current_room')
+    if not current_room:
         await callback_query.answer("Ошибка: данные квартиры не найдены")
         return
     data = await get_catalog_data()
@@ -21,7 +21,7 @@ async def send_invoice(bot: Bot, callback_query: types.CallbackQuery, user_data:
         return
 
     # Calculate the total price based on the number of rental days
-    price = current_apartment.price
+    price = current_room.price
     currency = "RUB"
     new_price = price * max(user_data.get('rent_days', 1), 1)
     prices = [LabeledPrice(label='Subscription', amount=new_price * 100)]
@@ -36,7 +36,7 @@ async def send_invoice(bot: Bot, callback_query: types.CallbackQuery, user_data:
     )
 
 
-async def handle_successful_payment(bot: Bot, message: types.Message):
+async def handler_successful_payment(bot: Bot, message: types.Message):
     payment_info = message.successful_payment
     # Displaying the payment details in the console
     for k, v in payment_info.__dict__.items():
