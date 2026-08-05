@@ -1,17 +1,21 @@
 from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
+
 from apps.rooms.crud import (
     get_catalog_data,
-    get_catalog_by_category)
+    get_catalog_by_category
+)
+
 from bot.common import texts
 from bot.keyboards.user_keyboard import catalog_categories_keyboard
 from bot.utils.catalog_utils import show_room_data
 from bot.utils.paginator import Paginator
 
+
 router = Router()
 
 
-# Showing apartment categories
+# Showing room categories
 @router.message(F.text == "🛍Каталог")
 async def show_catalog_categories(message: types.Message, state: FSMContext):
     await state.clear()
@@ -38,18 +42,18 @@ async def show_rooms_by_category(callback: types.CallbackQuery, state: FSMContex
         return
 
     await state.update_data(rooms=rooms, page=1)
-    data = await state.get_data()
     await show_room_data(
         callback.message,
+        state,
         rooms=rooms,
         index=0
     )
     await callback.answer()
 
 
-# Navigation: next apartment
+# Navigation: next room
 @router.callback_query(F.data.startswith("next_"))
-async def next_apartment(callback: types.CallbackQuery, state: FSMContext):
+async def next_room(callback: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     rooms = data.get('rooms', [])
     page = data.get('page', 1)
@@ -64,15 +68,16 @@ async def next_apartment(callback: types.CallbackQuery, state: FSMContext):
 
     await show_room_data(
         callback.message,
+        state,
         rooms=rooms,
         index=page - 1
     )
     await callback.answer()
 
 
-# Navigation: previous apartment
+# Navigation: previous room
 @router.callback_query(F.data.startswith("prev_"))
-async def prev_apartment(callback: types.CallbackQuery, state: FSMContext):
+async def prev_room(callback: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     rooms = data.get('rooms', [])
     page = data.get('page', 1)
@@ -87,6 +92,7 @@ async def prev_apartment(callback: types.CallbackQuery, state: FSMContext):
 
     await show_room_data(
         callback.message,
+        state,
         rooms=rooms,
         index=page - 1
     )

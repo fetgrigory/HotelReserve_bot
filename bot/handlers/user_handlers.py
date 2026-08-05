@@ -23,7 +23,7 @@ from bot.services.booking_service import (
     calculate_price,
     get_dates
 )
-from bot.services.reservation_draft import process_add_apartment_to_draft
+from bot.services.reservation_draft import process_add_room_to_draft
 from bot.states import BookingState, QuestionState, ReviewState
 
 router = Router()
@@ -49,7 +49,7 @@ async def start(message: types.Message, state: FSMContext):
 # Add to draft action
 @router.callback_query(F.data == BookingCB.ADD_TO_DRAFT)
 async def add_to_draft_handler(callback_query: types.CallbackQuery, state: FSMContext):
-    await process_add_apartment_to_draft(callback_query, state)
+    await process_add_room_to_draft(callback_query, state)
 
 
 # Start booking process

@@ -1,17 +1,25 @@
 from aiogram import types
+from aiogram.fsm.context import FSMContext
 from aiogram.types import FSInputFile
+
 from bot.keyboards.user_keyboard import catalog_navigation_keyboard
 from bot.utils.paginator import Paginator
 
 
-# Render apartment data for catalog
-async def show_room_data(message: types.Message, rooms, index=0):
+# Render room data for catalog
+async def show_room_data(
+    message: types.Message,
+    state: FSMContext,
+    rooms,
+    index=0
+):
     if not rooms:
         await message.answer("Каталог пуст!")
         return
 
     paginator = Paginator(rooms, page=index + 1)
     record = paginator.get_page()[0]
+    await state.update_data(current_room=record)
 
     photos_info = [
         types.InputMediaPhoto(
@@ -20,13 +28,18 @@ async def show_room_data(message: types.Message, rooms, index=0):
         for i in range(1, 4)
         if getattr(record, f'photo{i}')
     ]
+
     message_text = (
         f"🏨 <strong>Описание:</strong>\n{record.description}\n\n"
         f"💰 <strong>Цена за ночь:</strong> {record.price} ₽\n\n"
         f"<strong>Номер {paginator.page} из {paginator.pages}</strong>"
     )
 
-    keyboard = catalog_navigation_keyboard(index, len(rooms), record.id)
+    keyboard = catalog_navigation_keyboard(
+        index,
+        len(rooms),
+        record.id
+    )
 
     if photos_info:
         await message.bot.send_media_group(
