@@ -2,6 +2,7 @@ from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
 
+# Create a ReplyKeyboardMarkup for the main menu
 def start_keyboard():
     keyboard = ReplyKeyboardBuilder()
     keyboard.add(types.KeyboardButton(text="🛍Каталог"))
@@ -46,11 +47,22 @@ def booking_keyboard():
         types.InlineKeyboardButton(text="-1", callback_data="subtract_days"),
         types.InlineKeyboardButton(text="+1", callback_data="add_days"),
         types.InlineKeyboardButton(text="🛒 Положить в корзину", callback_data="add_to_draft"),
+        types.InlineKeyboardButton(text="🔙 Продолжить выбор", callback_data="back_to_catalog")
+    )
+    keyboard.adjust(2, 1, 1)
+
+    return keyboard.as_markup()
+
+
+# Create an InlineKeyboardMarkup for reservation draft management
+def draft_keyboard():
+    keyboard = InlineKeyboardBuilder()
+    keyboard.add(
         types.InlineKeyboardButton(text="🗑 Очистить корзину", callback_data="clear_draft"),
         types.InlineKeyboardButton(text="🔙 Продолжить выбор", callback_data="back_to_catalog"),
         types.InlineKeyboardButton(text="💳 Оплатить", callback_data="pay")
     )
 
-    keyboard.adjust(2, 1, 2, 1)
+    keyboard.adjust(2, 1)
 
     return keyboard.as_markup()

@@ -5,7 +5,7 @@ from apps.bookings.crud import delete_reservation_draft, get_user_reservation_dr
 from bot.common import texts
 from bot.common.callbacks import BookingCB
 from bot.keyboards.user_keyboard import (
-    booking_keyboard,
+    draft_keyboard,
     catalog_categories_keyboard,
     start_keyboard
 )
@@ -44,7 +44,7 @@ async def show_booking_draft(message: types.Message):
         price=total_price
     )
 
-    keyboard = booking_keyboard()
+    keyboard = draft_keyboard()
 
     await message.answer(text, reply_markup=keyboard)
 
