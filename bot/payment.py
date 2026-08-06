@@ -4,6 +4,7 @@ from aiogram import Bot, types
 from aiogram.types import LabeledPrice
 
 from apps.bookings.crud import get_user_reservation_draft
+from bot.services.booking_service import calculate_booking_total
 
 
 async def send_invoice(bot: Bot, callback_query: types.CallbackQuery):
@@ -20,11 +21,11 @@ async def send_invoice(bot: Bot, callback_query: types.CallbackQuery):
 
     room = draft.room
 
-    # Calculate the total price based on the number of rental days
-    rent_days = (draft.end_date - draft.start_date).days
-    rent_days = max(rent_days, 1)
-
-    total_price = room.price * rent_days
+    rent_days, total_price = calculate_booking_total(
+        price_per_day=room.price,
+        start_date=draft.start_date,
+        end_date=draft.end_date
+    )
 
     title = f"Бронь: {room.name if hasattr(room, 'name') else 'Номер в отеле'}"
     description = (

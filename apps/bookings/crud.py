@@ -5,6 +5,7 @@ from asgiref.sync import sync_to_async
 from apps.bookings.models import Booking, ReservationDraft
 from apps.users.models import User
 from apps.rooms.models import Room
+from bot.services.booking_service import calculate_booking_total
 
 
 # Inserts a new booking record
@@ -117,10 +118,12 @@ def process_draft_payment_success(user_telegram_id: int):
     if not draft or not draft.room:
         return None
 
-    rent_days = (draft.end_date - draft.start_date).days
-    rent_days = max(rent_days, 1)
-
-    total_price = draft.room.price * rent_days
+    # Calculate booking details using the service function
+    rent_days, total_price = calculate_booking_total(
+        price_per_day=draft.room.price,
+        start_date=draft.start_date,
+        end_date=draft.end_date
+    )
 
     booking = Booking.objects.create(
         user=user,

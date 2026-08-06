@@ -6,7 +6,7 @@ from apps.users.crud import check_user_exists, insert_user_data
 from bot.common import texts
 from bot.common.callbacks import BookingCB
 from bot.keyboards.user_keyboard import booking_keyboard
-from bot.services.booking_service import calculate_days, calculate_price, get_dates
+from bot.services.booking_service import calculate_rent_days, calculate_price, get_dates
 from bot.states import BookingState
 
 router = Router()
@@ -103,7 +103,7 @@ async def add_days(callback_query: types.CallbackQuery, state: FSMContext):
         await callback_query.answer(texts.ERROR_ROOM_NOT_FOUND)
         return
 
-    rent_days = calculate_days(data.get('rent_days', 1), 1)
+    rent_days = calculate_rent_days(data.get('rent_days', 1), 1)
     await state.update_data(rent_days=rent_days)
 
     new_price = calculate_price(room.price, rent_days)
@@ -124,7 +124,7 @@ async def subtract_days(callback_query: types.CallbackQuery, state: FSMContext):
         await callback_query.answer(texts.ERROR_ROOM_NOT_FOUND)
         return
 
-    rent_days = calculate_days(data.get('rent_days', 1), -1)
+    rent_days = calculate_rent_days(data.get('rent_days', 1), -1)
     await state.update_data(rent_days=rent_days)
 
     new_price = calculate_price(room.price, rent_days)
