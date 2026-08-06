@@ -55,15 +55,16 @@ CVC/CVV: 111<br />
 <img width="1914" height="906" alt="Снимок экрана 2026-07-27 171143" src="https://github.com/user-attachments/assets/6b69d983-39fa-4d40-8f17-44e753f0811b" /><br />
 
 ### Пользовательский интерфейс
-![Снимок экрана 2025-06-06 164056](https://github.com/user-attachments/assets/863e2b1a-277e-4d5c-b589-1539369ab59e)<br />
-![Снимок экрана 2025-06-06 174935](https://github.com/user-attachments/assets/bcca3b84-dd47-4f76-a1c3-b8944e0e091c)<br />
-![Снимок экрана 2025-06-06 170135](https://github.com/user-attachments/assets/99fa905e-e864-4dc3-86a5-50eaa15c60c3)<br />
-![Снимок экрана 2025-06-06 172754](https://github.com/user-attachments/assets/65fa2593-5fc5-4f94-bb53-1b26024d326a)<br />
-![Снимок экрана 2025-06-06 173428](https://github.com/user-attachments/assets/f340ae76-4c3b-49d0-a55b-7441eefeea44)<br />
+<img width="1217" height="1032" alt="Снимок экрана 2026-08-06 215813" src="https://github.com/user-attachments/assets/c04baa9a-fe70-47cb-bf08-675708299c91" /><br />
+<img width="1212" height="1032" alt="Снимок экрана 2026-08-06 220055" src="https://github.com/user-attachments/assets/a2f78302-f4ef-4862-a850-327e8e895ff7" /><br />
+<img width="1217" height="1032" alt="Снимок экрана 2026-08-06 220630" src="https://github.com/user-attachments/assets/0b1a95ab-ad0f-47bd-9c86-99ae99a07196" /><br />
+<img width="1219" height="1032" alt="Снимок экрана 2026-08-06 221151" src="https://github.com/user-attachments/assets/457992dd-62d1-4349-94eb-ad3bd970e7ea" /><br />
+<img width="1224" height="1032" alt="Снимок экрана 2026-08-06 221513" src="https://github.com/user-attachments/assets/7d9e3ba8-dd65-44b4-bd7d-54cb8f387c90" /><br />
 
 ## 💳 Платежные системы
 ### Redsys
 ![Процесс оплаты](https://github.com/user-attachments/assets/a1bb13ea-8507-4279-bb67-a746d8241c31)<br />
+<img width="384" height="595" alt="Снимок экрана 2026-08-06 221915" src="https://github.com/user-attachments/assets/df6e319a-7545-4ced-9edf-f2b28a3da20e" /><br />
 *Преимущество: мгновенное подтверждение брони*
 
 ---
