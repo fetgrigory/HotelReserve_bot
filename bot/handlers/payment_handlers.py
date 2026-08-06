@@ -2,20 +2,20 @@ from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
 from aiogram.types import ContentType
 
-from apps.bookings.crud import insert_booking_data
+from apps.bookings.crud import process_draft_payment_success
 from bot.common import texts
 from bot.common.callbacks import BookingCB
 from bot.payment import send_invoice
-from bot.services.booking_service import calculate_price, get_dates
+
 
 router = Router()
 
 
 # Payment processing
 @router.callback_query(F.data == BookingCB.PAY)
-async def pay_for_apartment(callback_query: types.CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    await send_invoice(callback_query.bot, callback_query, data)
+async def pay_for_apartment(callback_query: types.CallbackQuery):
+    await send_invoice(callback_query.bot, callback_query)
+    await callback_query.answer()
 
 
 @router.pre_checkout_query()
@@ -28,21 +28,17 @@ async def successful_payment(message: types.Message, state: FSMContext):
     await handler_successful_payment(message.bot, message, state)
 
 
-async def handler_successful_payment(bot, message, state: FSMContext):
+async def handler_successful_payment(bot, message, state):
     user_id = message.from_user.id
-    data = await state.get_data()
 
-    room = data['current_room']
-    rent_days = data.get('rent_days', 1)
-    start_date, _ = get_dates(rent_days)
-    total_price = calculate_price(room.price, rent_days)
+    booking = await process_draft_payment_success(user_id)
 
-    await insert_booking_data(
-        user_id,
-        room.id,
-        start_date,
-        rent_days,
-        total_price
-    )
-
-    await bot.send_message(user_id, texts.PAYMENT_SUCCESS)
+    if booking:
+        await state.clear()
+        await bot.send_message(user_id, texts.PAYMENT_SUCCESS)
+    else:
+        await bot.send_message(
+            user_id,
+            "✅ Оплата прошла успешно, но возникла ошибка при переносе записи из корзины.\n"
+            "Пожалуйста, свяжитесь со службой поддержки."
+        )

@@ -1,30 +1,48 @@
 import os
+
 from aiogram import Bot, types
 from aiogram.types import LabeledPrice
-from apps.rooms.crud import get_catalog_data
+
+from apps.bookings.crud import get_user_reservation_draft
 
 
-async def send_invoice(bot: Bot, callback_query: types.CallbackQuery, user_data: dict):
+async def send_invoice(bot: Bot, callback_query: types.CallbackQuery):
     chat_id = callback_query.from_user.id
     # Set the title and description for the invoice
-    title = "Аренда квартиры"
-    description = "Аренда квартиры"
-    invoice_payload = "month_sub"
     provider_token = os.getenv('PAYMENTS_TOKEN')
-    current_room = user_data.get('current_room')
-    if not current_room:
-        await callback_query.answer("Ошибка: данные квартиры не найдены")
-        return
-    data = await get_catalog_data()
-    if not data:
-        await callback_query.answer("Ошибка: данные каталога не найдены")
+
+    # Get reservation draft data from database
+    draft = await get_user_reservation_draft(chat_id)
+
+    if not draft or not draft.room:
+        await callback_query.answer("Ошибка: данные бронирования не найдены")
         return
 
+    room = draft.room
+
     # Calculate the total price based on the number of rental days
-    price = current_room.price
+    rent_days = (draft.end_date - draft.start_date).days
+    rent_days = max(rent_days, 1)
+
+    total_price = room.price * rent_days
+
+    title = f"Бронь: {room.name if hasattr(room, 'name') else 'Номер в отеле'}"
+    description = (
+        f"Аренда на {rent_days} дн. "
+        f"({draft.start_date.strftime('%d.%m')} - "
+        f"{draft.end_date.strftime('%d.%m')})"
+    )
+
+    invoice_payload = f"draft_payment_{draft.id}"
     currency = "RUB"
-    new_price = price * max(user_data.get('rent_days', 1), 1)
-    prices = [LabeledPrice(label='Subscription', amount=new_price * 100)]
+
+    prices = [
+        LabeledPrice(
+            label=f"Проживание ({rent_days} дн.)",
+            amount=int(total_price * 100)
+        )
+    ]
+
     await bot.send_invoice(
         chat_id=chat_id,
         title=title,

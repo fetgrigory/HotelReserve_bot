@@ -96,3 +96,41 @@ def delete_reservation_draft(user_telegram_id: int):
     ReservationDraft.objects.filter(
         user__telegram_id=user_telegram_id
     ).delete()
+
+
+# Processes booking after successful payment from reservation draft
+@sync_to_async
+def process_draft_payment_success(user_telegram_id: int):
+    user = User.objects.filter(
+        telegram_id=user_telegram_id
+    ).first()
+
+    if not user:
+        return None
+
+    draft = ReservationDraft.objects.filter(
+        user=user
+    ).select_related(
+        'room'
+    ).first()
+
+    if not draft or not draft.room:
+        return None
+
+    rent_days = (draft.end_date - draft.start_date).days
+    rent_days = max(rent_days, 1)
+
+    total_price = draft.room.price * rent_days
+
+    booking = Booking.objects.create(
+        user=user,
+        room=draft.room,
+        start_date=draft.start_date,
+        end_date=draft.end_date,
+        rent_days=rent_days,
+        total_price=total_price
+    )
+
+    draft.delete()
+
+    return booking
