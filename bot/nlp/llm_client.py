@@ -1,8 +1,12 @@
+import logging
 import os
-from openai import OpenAI
 
+from openai import AsyncOpenAI
+from openai.types.chat import ChatCompletionMessageParam
 
-system_prompt = """
+logger = logging.getLogger(__name__)
+
+SYSTEM_PROMPT = """
 Ты — виртуальный консультант отеля.
 
 Твоя задача — помогать пользователям, отвечая только на основе предоставленного контекста.
@@ -14,6 +18,7 @@ system_prompt = """
 Правила ответа:
 
 1. Если в контексте есть информация, которая отвечает на вопрос пользователя:
+
 - используй только информацию из контекста;
 - переформулируй её естественным и вежливым языком;
 - отвечай как сотрудник службы поддержки отеля;
@@ -21,6 +26,7 @@ system_prompt = """
 - не добавляй новые факты, которых нет в контексте.
 
 2. Если в контексте нет ответа на вопрос пользователя:
+
 - не пытайся угадать ответ;
 - не объясняй, почему информации нет;
 - не анализируй возможные причины;
@@ -34,6 +40,7 @@ system_prompt = """
 Не изменяй эту фразу и не добавляй к ней дополнительные предложения.
 
 Запрещено:
+
 - придумывать факты;
 - добавлять информацию от себя;
 - дополнять ответ логическими предположениями;
@@ -42,6 +49,7 @@ system_prompt = """
 - упоминать контекст, базу данных, FAQ, поиск или нейросеть.
 
 Стиль ответа:
+
 - дружелюбный;
 - краткий;
 - профессиональный;
@@ -52,35 +60,49 @@ system_prompt = """
 """
 
 
-def ask_gpt(question: str, context: str) -> str:
-    try:
+class LLMClient:
+    def __init__(self) -> None:
         api_url = os.getenv("OLLAMA_API_URL")
 
-        client = OpenAI(
+        if not api_url:
+            raise ValueError("OLLAMA_API_URL is not configured")
+
+        self.client = AsyncOpenAI(
             base_url=f"{api_url}/v1",
-            api_key="ollama"
+            api_key="ollama",
         )
+        self.model = "qwen2.5:3b"
 
-        # Create request messages for the LLM
-        messages_with_system = [
-            {
-                "role": "system",
-                "content": system_prompt.format(context=context),
-            },
-            {
-                "role": "user",
-                "content": f"Контекст:\n\n{context}\n\nВопрос пользователя:\n\n{question}",
-            },
-        ]
+    async def get_response(
+        self,
+        question: str,
+        context: str,
+    ) -> str:
+        try:
+            # Create request messages for the LLM
+            messages: list[ChatCompletionMessageParam] = [
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT.format(context=context),
+                },
+                {
+                    "role": "user",
+                    "content": f"Вопрос пользователя:\n\n{question}",
+                },
+            ]
 
-        # Get LLM response
-        response = client.chat.completions.create(
-            model='qwen2.5:3b',
-            messages=messages_with_system,
-        )
+            # Get LLM response
+            response = await self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+            )
 
-        return response.choices[0].message.content
+            return response.choices[0].message.content or ""
 
-    except Exception as e:
-        print(f"Error getting GPT response: {e}")
-        return "Извините, в данный момент я не могу ответить на ваш вопрос. Пожалуйста, попробуйте позже."
+        except Exception:
+            logger.exception("Error getting GPT response")
+
+            return (
+                "Извините, в данный момент я не могу ответить на ваш вопрос. "
+                "Пожалуйста, попробуйте позже."
+            )

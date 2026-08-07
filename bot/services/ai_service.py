@@ -1,11 +1,18 @@
 from typing import List, Dict
+
 from asgiref.sync import sync_to_async
+
 from bot.nlp.rag.vector_search import search_faq, get_faq_answer
-from bot.nlp.llm_client import ask_gpt
+from bot.nlp.llm_client import LLMClient
+
+llm_client = LLMClient()
 
 
-async def process_question(message_text: str,
-                           messages: List[Dict]) -> tuple[str, List[Dict]]:
+async def process_question(
+    message_text: str,
+    messages: List[Dict]
+) -> tuple[str, List[Dict]]:
+
     new_messages = messages.copy()
     new_messages.append({"role": "user", "content": message_text})
 
@@ -17,9 +24,9 @@ async def process_question(message_text: str,
         context = await sync_to_async(get_faq_answer)(results)
 
         # Send question and context to the LLM
-        response = await sync_to_async(ask_gpt)(
-            message_text,
-            context
+        response = await llm_client.get_response(
+            question=message_text,
+            context=context
         )
 
     else:
