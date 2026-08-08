@@ -31,7 +31,7 @@ Telegram-бот для управления гостиничными номер�
 6. Сформированный ответ отправляется пользователю.
 ---
 
-## Локальная vs облачная LLM для диалогового ассистента
+## Локальная vs облачная LLM для AI-помощника
 
 | Критерий          | **☁ Облачная LLM** | **🖥 Локальная LLM** | **Как это влияет на проект** |
 |-------------------------------|------------------------|-------------------|----------------|
@@ -64,7 +64,7 @@ CVC/CVV: 111<br />
 <img width="1669" height="911" alt="admin_2" src="https://github.com/user-attachments/assets/c520c609-df25-41a3-a780-8d8b29109db2" /><br />
 <img width="1912" height="905" alt="Снимок экрана 2026-07-27 171045" src="https://github.com/user-attachments/assets/91c42446-7c36-437b-8e93-4a85f469c6d6" /><br />
 <img width="1914" height="906" alt="Снимок экрана 2026-07-27 171143" src="https://github.com/user-attachments/assets/6b69d983-39fa-4d40-8f17-44e753f0811b" /><br />
-<img width="1913" height="903" alt="Снимок экрана 2026-08-08 164109" src="https://github.com/user-attachments/assets/65770863-2166-46b1-856c-829e840430e2" /><br />
+<img width="1912" height="905" alt="Снимок экрана 2026-08-08 210855" src="https://github.com/user-attachments/assets/d3887eef-8ecb-4d8a-a6b1-d8ce2b360263" /><br />
 
 ### Пользовательский интерфейс
 <img width="1217" height="1032" alt="Снимок экрана 2026-08-06 215813" src="https://github.com/user-attachments/assets/c04baa9a-fe70-47cb-bf08-675708299c91" /><br />
