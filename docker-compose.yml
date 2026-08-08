@@ -26,9 +26,11 @@ services:
         condition: service_healthy
       ollama:
         condition: service_started
+    environment:
+      OLLAMA_API_URL: http://ollama:11434
 
   db:
-    image: pgvector/pgvector:pg18 
+    image: pgvector/pgvector:pg18
     env_file:
       - .env
     environment:
@@ -40,7 +42,6 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql
     restart: unless-stopped
-    
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${USER} -d ${DBNAME}"]
       interval: 5s
