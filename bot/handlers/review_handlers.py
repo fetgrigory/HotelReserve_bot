@@ -1,7 +1,9 @@
 from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
+from pydantic import ValidationError
 
 from apps.reviews.crud import insert_review
+from apps.reviews.schemas import ReviewCreate
 from bot.common import texts
 from bot.states import ReviewState
 
@@ -27,10 +29,16 @@ async def save_review(message: types.Message, state: FSMContext):
 
     user_id = message.from_user.id
 
+    try:
+        review_data = ReviewCreate(text=message.text)
+    except ValidationError:
+        await message.answer(texts.REVIEW_LENGTH_ERROR)
+        return
+
     review = await insert_review(
         user_id,
         room,
-        message.text,
+        review_data.text,
     )
 
     if review is None:
