@@ -1,12 +1,15 @@
+import logging
 from django.db import models
 from pgvector.django import VectorField
 from sentence_transformers import SentenceTransformer
+
+log = logging.getLogger(__name__)
 
 # Uploading a model for embeddings
 embedding_model = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 
 
-# Frequently asked questions table with vector embeddings
+# Frequently asked questions
 class FAQ(models.Model):
     question = models.TextField(verbose_name="Вопрос")
     answer = models.TextField(verbose_name="Ответ")
@@ -15,9 +18,13 @@ class FAQ(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
 
     def save(self, *args, **kwargs):
-        # Generate embedding before save
+        # Generate embedding if created or updated
         text = self.question
-        self.embedding = embedding_model.encode(text).tolist()
+        try:
+            self.embedding = embedding_model.encode(text).tolist()
+        except Exception as e:
+            logging.error("Error generating embedding: %s", e)
+            # Save even if embedding failed
         super().save(*args, **kwargs)
 
     # String representation for admin panel
