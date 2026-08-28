@@ -34,3 +34,21 @@ class FAQ(models.Model):
     class Meta:
         verbose_name = "FAQ"
         verbose_name_plural = "FAQ"
+
+
+# Internal regulation document chunks
+class DocumentChunk(models.Model):
+    document_title = models.CharField(max_length=255, verbose_name="Название документа")
+    file = models.FileField(upload_to="regulations/")
+    content = models.TextField()
+    chunk_index = models.IntegerField()
+    embedding = VectorField(dimensions=384, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Пункт регламента"
+        verbose_name_plural = "Внутренние регламенты"
+        unique_together = ('document_title', 'chunk_index')
+
+    def __str__(self):
+        return f"{self.document_title} - Chunk {self.chunk_index}"
