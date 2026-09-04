@@ -4,6 +4,8 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from apps.support.models import DocumentChunk
+
 
 # Load PDF and extract text
 def parse_document(file_path: str) -> list[Document]:
@@ -79,3 +81,29 @@ def parse_document(file_path: str) -> list[Document]:
                 )
 
     return chunks
+
+
+class DocumentProcessor:
+    @staticmethod
+    def process(
+        file_path: str,
+        document_title: str,
+        file_name: str,
+    ) -> list[DocumentChunk]:
+
+        chunks = parse_document(file_path)
+
+        if not chunks:
+            return []
+
+        document_chunks = [
+            DocumentChunk(
+                document_title=document_title,
+                file=file_name,
+                content=chunk.page_content,
+                chunk_index=index,
+            )
+            for index, chunk in enumerate(chunks)
+        ]
+
+        return DocumentChunk.objects.bulk_create(document_chunks)

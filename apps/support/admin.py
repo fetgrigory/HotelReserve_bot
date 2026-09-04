@@ -1,4 +1,6 @@
 from django.contrib import admin
+
+from bot.nlp.rag.document_parser import DocumentProcessor
 from .models import FAQ, DocumentChunk
 
 
@@ -16,3 +18,24 @@ class DocumentChunkAdmin(admin.ModelAdmin):
     search_fields = ("document_title", "content")
     list_filter = ("document_title",)
     fields = ("document_title", "file")
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            super().save_model(request, obj, form, change)
+            return
+
+        uploaded_file = form.cleaned_data["file"]
+
+        # Save file to storage without creating DocumentChunk yet
+        obj.file.save(
+            uploaded_file.name,
+            uploaded_file,
+            save=False,
+        )
+
+        # Process PDF and create chunks in DB
+        DocumentProcessor.process(
+            file_path=obj.file.path,
+            document_title=obj.document_title,
+            file_name=obj.file.name,
+        )
