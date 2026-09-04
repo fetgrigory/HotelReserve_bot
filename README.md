@@ -172,6 +172,7 @@ HotelReserve_bot/
 │   ├── nlp/                     # Модули обработки естественного языка и LLM
 │   │   ├── rag/
 │   │   │   ├── __init__.py
+│   │   │   ├── document_parser.py
 │   │   │   └── vector_search.py
 │   │   ├── __init__.py
 │   │   ├── llm_client.py
