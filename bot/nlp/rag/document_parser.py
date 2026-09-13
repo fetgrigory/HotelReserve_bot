@@ -4,7 +4,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.documents import Document as LangChainDocument
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from apps.support.models import Document, DocumentChunk
+from apps.support.models import Document, DocumentChunk, embedding_model
 
 
 # Load PDF and extract text
@@ -96,6 +96,7 @@ def create_document_chunks(document: Document) -> list[DocumentChunk]:
             document=document,
             content=chunk.page_content,
             chunk_index=index,
+            embedding=embedding_model.encode(chunk.page_content).tolist(),
         )
         for index, chunk in enumerate(chunks)
     ]

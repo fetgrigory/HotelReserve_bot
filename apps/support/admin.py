@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from bot.nlp.rag.document_parser import parse_document
+from bot.nlp.rag.document_parser import create_document_chunks
 
-from .models import FAQ, Document, DocumentChunk
+from .models import FAQ, Document
 
 
 @admin.register(FAQ)
@@ -17,7 +17,7 @@ class FAQAdmin(admin.ModelAdmin):
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
     list_display = ("title", "chunk_count", "created_at")
-    search_fields = ("title", )
+    search_fields = ("title",)
     fields = ("title", "file")
 
     def get_queryset(self, request):
@@ -35,15 +35,4 @@ class DocumentAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
         if not change:
-            chunks = parse_document(obj.file.path)
-
-            DocumentChunk.objects.bulk_create(
-                [
-                    DocumentChunk(
-                        document=obj,
-                        content=chunk.page_content,
-                        chunk_index=index,
-                    )
-                    for index, chunk in enumerate(chunks)
-                ]
-            )
+            create_document_chunks(obj)
