@@ -75,9 +75,13 @@ async def process_question(
 
         if document_results:
             logger.info(
-                "Document similarities: %s",
+                "Document results: %s",
                 [
-                    round(1 - result.distance, 4)
+                    {
+                        "similarity": round(1 - result.distance, 4),
+                        "chunk_index": result.chunk_index,
+                        "content": result.content,
+                    }
                     for result in document_results
                 ],
             )
