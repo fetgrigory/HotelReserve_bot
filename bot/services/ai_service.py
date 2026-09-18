@@ -4,7 +4,8 @@ from typing import Dict, List
 from asgiref.sync import sync_to_async
 
 from bot.nlp.llm_client import LLMClient
-from bot.nlp.rag.vector_search import (get_document_chunks_context,
+from bot.nlp.rag.vector_search import (calculate_similarity,
+                                       get_document_chunks_context,
                                        get_faq_answer, is_relevant_faq,
                                        search_document_chunks, search_faq)
 
@@ -33,8 +34,7 @@ async def process_question(
     faq_context = ""
 
     if faq_results:
-        faq_similarity = 1 - faq_results[0].distance
-
+        faq_similarity = calculate_similarity(faq_results[0].distance)
         logger.info(
             "FAQ result: distance=%.4f, similarity=%.4f, relevant=%s",
             faq_results[0].distance,
@@ -78,7 +78,7 @@ async def process_question(
                 "Document results: %s",
                 [
                     {
-                        "similarity": round(1 - result.distance, 4),
+                        "similarity": round(calculate_similarity(result.distance), 4),
                         "chunk_index": result.chunk_index,
                         "content": result.content,
                     }
