@@ -64,7 +64,7 @@ async def process_question(
         # Semantic search by documents
         document_results = await sync_to_async(search_document_chunks)(
             message_text,
-            limit=1,
+            limit=5,
         )
 
         logger.info(
@@ -97,9 +97,21 @@ async def process_question(
         )
 
         if document_context:
+            logger.info(
+                "LLM context for query %r:\n%s",
+                message_text,
+                document_context,
+            )
+
             response = await llm_client.get_response(
                 question=message_text,
                 context=document_context,
+            )
+
+            logger.info(
+                "LLM response for query %r: %r",
+                message_text,
+                response,
             )
 
             logger.info("Response generated using document context")

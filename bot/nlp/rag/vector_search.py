@@ -4,7 +4,7 @@ from apps.support.models import FAQ, DocumentChunk
 
 
 FAQ_SIMILARITY_THRESHOLD = 0.45
-DOCUMENT_CHUNK_SIMILARITY_THRESHOLD = 0.45
+DOCUMENT_CHUNK_SIMILARITY_THRESHOLD = 0.35
 
 
 # Uploading a model for embeddings
@@ -58,7 +58,7 @@ def get_query_embedding(query_text: str) -> list[float]:
     ).tolist()
 
 
-def search_document_chunks(query_text: str, limit: int = 1) -> list[DocumentChunk]:
+def search_document_chunks(query_text: str, limit: int = 5) -> list[DocumentChunk]:
 
     query_embedding = get_query_embedding(query_text)
 
