@@ -4,6 +4,7 @@ from typing import Dict, List
 from asgiref.sync import sync_to_async
 
 from bot.nlp.llm_client import LLMClient
+from bot.common.texts import AI_NO_ANSWER
 from bot.nlp.rag.vector_search import (calculate_similarity,
                                        get_document_chunks_context,
                                        get_faq_answer, is_relevant_faq,
@@ -117,14 +118,9 @@ async def process_question(
             logger.info("Response generated using document context")
 
         else:
-            logger.info(
-                "No relevant document context found. Using fallback."
-            )
+            logger.info("No relevant document context found. Using fallback.")
 
-            response = (
-                "К сожалению, у меня нет информации по этому вопросу. "
-                "Пожалуйста, обратитесь к сотруднику отеля."
-            )
+            response = AI_NO_ANSWER
 
     new_messages.append({"role": "assistant", "content": response})
     return response, new_messages
