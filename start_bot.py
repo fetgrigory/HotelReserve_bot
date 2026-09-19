@@ -23,9 +23,13 @@ from bot.handlers.payment_handlers import router as payment_router
 from bot.handlers.review_handlers import router as review_router
 from bot.handlers.ai_handlers import router as ai_router
 
+os.makedirs("logs", exist_ok=True)
+
 logging.basicConfig(
+    filename='logs/bot.log',
     level=logging.INFO,
-    format='[%(asctime)s] [%(levelname)s] %(name)s: %(message)s'
+    format='[%(asctime)s] [%(levelname)s] %(name)s: %(message)s',
+    encoding='utf-8'
 )
 
 logger = logging.getLogger(__name__)
